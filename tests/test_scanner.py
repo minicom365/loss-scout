@@ -2,9 +2,9 @@
 
 import numpy as np
 
-from losslens import scanner as S
-from losslens import losses as L
-from losslens.metrics import diagnose
+from loss_scout import scanner as S
+from loss_scout import losses as L
+from loss_scout.metrics import diagnose
 
 
 def test_bce_is_healthy():

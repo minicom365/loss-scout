@@ -1,4 +1,4 @@
-# LossLens Guidebook — Designing Loss Functions with a Pre-Training Scan
+# Loss-Scout Guidebook — Designing Loss Functions with a Pre-Training Scan
 
 > **Model-free loss landscape diagnostics.** Scan the output-space gradient and
 > curvature of any loss formula *before* you train, using only the formula.
@@ -21,7 +21,7 @@ loss formula alone**. If the loss has a dead zone, a cliff, or a trivial minimum
 prediction space, *no* architecture (Transformer, U-Net, whatever) can escape it:
 the optimizer is driven by $\partial L/\partial \hat y$ first.
 
-LossLens sweeps the prediction $\hat y$ over a domain and reports four
+Loss-Scout sweeps the prediction $\hat y$ over a domain and reports four
 domain-agnostic pathologies:
 
 | # | Pathology | Signal | Consequence |
@@ -55,7 +55,7 @@ flowchart TD
 3. **Symmetry & scale.** Check scale invariance, permutation invariance, and
    rotational symmetry. (SI-SDR is scale-invariant in the signal gain; that is a
    feature *and* a trap — see `docs/loss_catalog.md`.)
-4. **Block pathologies.** This is exactly what LossLens automates.
+4. **Block pathologies.** This is exactly what Loss-Scout automates.
 5. **Surrogate validation.** Confirm the loss upper-bounds / tracks the real
    metric (CER, F1, mAP). A loss that descends while the metric flatlines is a
    broken surrogate.
@@ -68,30 +68,37 @@ flowchart TD
 pip install -e .
 
 # list built-in losses and domains
-losslens catalog
+loss-scout catalog
 
 # scan one loss
-losslens scan --loss bce --domain binary_probability
-losslens scan --loss focal --domain binary_probability --json
-losslens scan --loss log_magnitude_l1 --domain magnitude --markdown
+loss-scout scan --loss bce --domain binary_probability
+loss-scout scan --loss focal --domain binary_probability --json
+loss-scout scan --loss log_magnitude_l1 --domain magnitude --markdown
+
+# render a landscape figure (requires matplotlib)
+loss-scout scan --loss bimodal --domain binary_probability --plot bimodal.png
 ```
 
 Programmatic:
 
 ```python
-from losslens import scan, diagnose, format_report
-from losslens import scanner as S
-from losslens import losses as L
+from loss_scout import scan, diagnose, format_report
+from loss_scout import scanner as S
+from loss_scout import losses as L
 
 d = diagnose(scan(L.bce, S.binary_probability(), loss_name="bce"))
 print(format_report(d))          # or to_json(d) / to_markdown(d)
+
+# visualize: loss / gradient / curvature / verdict
+from loss_scout import plot_scan
+plot_scan(scan(L.bce, S.binary_probability(), loss_name="bce"), d, path="bce.png")
 ```
 
 ---
 
 ## 4. How to scan your own loss
 
-A loss in LossLens is any **total, vectorized** function:
+A loss in Loss-Scout is any **total, vectorized** function:
 
 ```python
 def my_loss(y_hat, y):        # y_hat: np.ndarray, y: float target
@@ -107,8 +114,8 @@ Rules:
 Then pick (or write) a `Domain` describing the prediction space:
 
 ```python
-from losslens.scanner import Domain, scan
-from losslens.metrics import diagnose
+from loss_scout.scanner import Domain, scan
+from loss_scout.metrics import diagnose
 
 dom = Domain(
     lo=0.0, hi=1.0,
@@ -125,7 +132,7 @@ check for vanishing gradient there.
 
 ---
 
-## 5. What LossLens can and cannot do
+## 5. What Loss-Scout can and cannot do
 
 **Can (0.1 s, CPU, no data):**
 - Detect vanishing gradient, ambiguity collapse, trivial-solution traps, and
@@ -140,13 +147,13 @@ check for vanishing gradient there.
   all samples and need their per-sample gradient formula; see
   `docs/loss_catalog.md`.
 
-Use LossLens as a **pre-training gate**, not a replacement for post-hoc loss
+Use Loss-Scout as a **pre-training gate**, not a replacement for post-hoc loss
 surface plots.
 
 ---
 
 ## 6. Thresholds
 
-The diagnostic thresholds are module constants in `losslens/metrics.py` and are
+The diagnostic thresholds are module constants in `loss_scout/metrics.py` and are
 documented (with rationale) in `docs/diagnostics.md`. They are deliberately
 loose: they separate *clearly* pathological losses from everything else.

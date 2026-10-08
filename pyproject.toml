@@ -3,13 +3,13 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "losslens"
+name = "loss-scout"
 version = "0.1.0"
-description = "LossLens — model-free loss landscape diagnostics: scan any loss function's output-space gradient and curvature before training, no model required."
+description = "Loss-Scout — model-free loss landscape diagnostics: scan any loss function's output-space gradient and curvature before training, no model required."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "LossLens Contributors" }]
+authors = [{ name = "Loss-Scout Contributors" }]
 keywords = [
     "loss-function",
     "loss-landscape",
@@ -34,10 +34,10 @@ plot = ["matplotlib>=3.5"]
 test = ["pytest>=7"]
 
 [project.scripts]
-losslens = "losslens.cli:main"
+loss-scout = "loss_scout.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["losslens*"]
+include = ["loss_scout*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,7 +1,7 @@
 # Loss Catalog — families, prediction spaces, and known pathologies
 
 The catalog below classifies loss families by their **prediction space** (the
-$\hat y$ domain LossLens sweeps) and records known pathologies. It is the
+$\hat y$ domain Loss-Scout sweeps) and records known pathologies. It is the
 domain-agnostic counterpart of a project-specific loss audit.
 
 ## A. Binary probability — $\hat y = p \in (0,1)$, $y \in \{0,1\}$

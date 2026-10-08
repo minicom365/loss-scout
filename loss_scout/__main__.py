@@ -1,4 +1,4 @@
-"""Allow ``python -m losslens``."""
+"""Allow ``python -m loss_scout``."""
 
 import sys
 

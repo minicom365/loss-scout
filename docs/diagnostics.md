@@ -68,5 +68,5 @@ diverge as the prediction → 0 (the silence-frame instability).
 ## Tuning thresholds
 
 If a domain legitimately needs looser/tighter thresholds, override the module
-constants in `losslens/metrics.py` or pass a custom `Domain`. The constants are
+constants in `loss_scout/metrics.py` or pass a custom `Domain`. The constants are
 the *only* domain-specific knob in the library.

@@ -1,11 +1,12 @@
-"""Command-line interface: ``python -m losslens`` / ``losslens``.
+"""Command-line interface: ``python -m loss_scout`` / ``loss-scout``.
 
 Examples
 --------
-    losslens catalog
-    losslens scan --loss bce --domain binary_probability
-    losslens scan --loss bce_with_logits --domain binary_logit --json
-    losslens scan --loss focal --domain binary_probability --markdown
+    loss-scout catalog
+    loss-scout scan --loss bce --domain binary_probability
+    loss-scout scan --loss bce_with_logits --domain binary_logit --json
+    loss-scout scan --loss focal --domain binary_probability --markdown
+    loss-scout scan --loss bimodal --domain binary_probability --plot bimodal.png
 """
 
 from __future__ import annotations
@@ -62,11 +63,14 @@ def _cmd_scan(args: argparse.Namespace) -> int:
         print(to_markdown(d))
     else:
         print(format_report(d))
+    if args.plot or args.show:
+        from .plot import plot_scan
+        plot_scan(result, d, path=args.plot, show=args.show)
     return 1 if d.has_flags() else 0
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="losslens", description="Model-free loss landscape diagnostics.")
+    p = argparse.ArgumentParser(prog="loss-scout", description="Model-free loss landscape diagnostics.")
     sub = p.add_subparsers(dest="command", required=True)
 
     sub.add_parser("catalog", help="list available losses and domains").set_defaults(func=_cmd_catalog)
@@ -76,6 +80,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--domain", required=True, choices=sorted(_DOMAIN_REGISTRY))
     sp.add_argument("--json", action="store_true", help="emit JSON")
     sp.add_argument("--markdown", action="store_true", help="emit a Markdown block")
+    sp.add_argument("--plot", metavar="PATH", help="save a landscape figure to PATH (.png/.svg/.pdf)")
+    sp.add_argument("--show", action="store_true", help="open an interactive plot window")
     sp.set_defaults(func=_cmd_scan)
     return p
 

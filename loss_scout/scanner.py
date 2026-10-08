@@ -1,7 +1,7 @@
 """Output-space loss landscape scanner.
 
 A loss is treated as a function ``L(ŷ, y)`` where ``ŷ`` is the model's scalar
-prediction and ``y`` is the target. LossLens sweeps ``ŷ`` over a user-defined
+prediction and ``y`` is the target. Loss-Scout sweeps ``ŷ`` over a user-defined
 :class:`Domain` while holding ``y`` fixed, and estimates the output-space
 gradient and curvature with finite differences. No model, no dataset, no
 autograd framework is required — only NumPy.
