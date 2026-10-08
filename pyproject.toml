@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "losslens"
+version = "0.1.0"
+description = "LossLens — model-free loss landscape diagnostics: scan any loss function's output-space gradient and curvature before training, no model required."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "LossLens Contributors" }]
+keywords = [
+    "loss-function",
+    "loss-landscape",
+    "optimization",
+    "deep-learning",
+    "diagnostics",
+    "gradient",
+    "curvature",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["numpy>=1.22"]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.5"]
+test = ["pytest>=7"]
+
+[project.scripts]
+losslens = "losslens.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["losslens*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
